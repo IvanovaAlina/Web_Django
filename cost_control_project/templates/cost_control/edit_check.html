@@ -1,0 +1,62 @@
+{% extends "main_page/base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+<link rel="stylesheet" href="{% static 'custom.css' %}">
+<div class="container">
+    <div class="row">
+        <div class="col-md-auto">
+            <a class="btn btn-outline-secondary btn-circle btn-circle-sm" href="{% url 'cost_control_project:check_list' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 20">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </a>
+        </div>
+        <div class="col-md-auto">
+            <h3>Редактирование чека</h3>
+        </div>
+    </div>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+<form action="{% url 'cost_control_project:edit_check' check.id %}" method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-auto">
+                <p>Приложение по чеку</p>
+            </div>
+        </div>
+        {% if check.photo_check %}
+            <div class="row">
+                <div class="col-md-auto">
+                    <p>Файл: {{ check.photo_check }}</p>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn btn-light btn-circle" href="{% url 'cost_control_project:download_upload' check.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up">
+                            <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z" />
+                            <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn btn-light btn-circle" href="{% url 'cost_control_project:delete_upload' check.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <input type="file" name="photo_check"> <br/> <br/>
+        {% endif %}
+    </div>
+     <button name="submit" class="btn btn-success">Сохарнить</button>
+     {% endbuttons %}
+</form>
+{% endblock content %}

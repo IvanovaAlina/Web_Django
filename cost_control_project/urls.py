@@ -1,0 +1,19 @@
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
+
+app_name = 'cost_control_project'
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('check_list/', views.check_list, name='check_list'),
+    path('new_check/', views.new_check, name='new_check'),
+    path('edit_check/<int:check_id>/', views.edit_check, name='edit_check'),
+    path('delete_check/<int:check_id>/', views.delete_check, name='delete_check'),
+    path('download_upload/<int:check_id>/', views.download_upload, name='download_upload'),
+    path('delete_upload/<int:check_id>/', views.delete_upload, name='delete_upload'),
+]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

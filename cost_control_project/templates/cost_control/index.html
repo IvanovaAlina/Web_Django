@@ -1,0 +1,20 @@
+{% extends "main_page/base.html" %}
+
+{% block page_header %}
+    <div class="jumbotron">
+        <h1 class="dicplay-3">Приложение для контроля расходов</h1>
+
+        <p class="lead">
+            Это приложение необходимо для внесения информации по вашим расходам.
+            У него присутвуют следующие функции:<br/>
+            1. Регистрация чеков, сумм и дат;<br />
+            2. Список чеков и квитанций; <br />
+            3. Возможность строить графики со статистикой (в этом году/в прошлом году);<br />
+            4. Хранение всего перечисленного.<br />
+        </p>
+        {% if not user.is_authenticated %}
+            <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}">Регистрация &raquo;</a>
+        {% endif %}
+    </div>
+{% endblock page_header %}
+
