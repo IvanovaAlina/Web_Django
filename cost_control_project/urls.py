@@ -12,6 +12,8 @@ urlpatterns = [
     path('delete_check/<int:check_id>/', views.delete_check, name='delete_check'),
     path('download_upload/<int:check_id>/', views.download_upload, name='download_upload'),
     path('delete_upload/<int:check_id>/', views.delete_upload, name='delete_upload'),
+    path('analyze_checks/', views.analyze_checks, name='analyze_checks'),
+    path('analyze_checks_filters/', views.analyze_checks_filters, name='analyze_checks_filters'),
 ]
 
 

@@ -7,6 +7,9 @@ from django.conf import settings
 import os
 from deep_translator import GoogleTranslator
 import requests
+import datetime
+from qsstats import QuerySetStats
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -106,3 +109,39 @@ def  delete_upload(request, check_id):
     context = {"item":check}
     return render(request, 'cost_control/confirm_delete_photo_check.html', context)
 
+@login_required
+def analyze_checks(request):
+    today = datetime.date.today()
+    start_date = today - datetime.timedelta(days=today.day) + datetime.timedelta(1)
+    end_date = today 
+    queryset = Checks.objects.filter(owner = request.user)
+    qsstats = QuerySetStats(queryset, date_field='date_check', aggregate=Sum('summ_check'))
+    values = qsstats.time_series(start_date, end_date, interval='days')
+    #google charts пишет дорбные числа через запятую, возникает ошибка, в итоге решила поменять на string
+    i = 0
+    for val in values:
+        loclist = list(val)
+        loclist[1] = str(loclist[1])
+        values[i] = tuple(loclist)
+        i+=1
+    context = {"data_checks":values, "start_date": str(start_date), "end_date": str(end_date) }
+    return render(request, 'cost_control/analitics_check.html', context)
+
+@login_required
+def analyze_checks_filters(request):
+    start_date_str = request.GET["date_begin"] 
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+    end_date_str = request.GET["date_end"]
+    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+    queryset = Checks.objects.filter(owner = request.user)
+    qsstats = QuerySetStats(queryset, date_field='date_check', aggregate=Sum('summ_check'))
+    values = qsstats.time_series(start_date, end_date, interval='days')
+    #google charts пишет дорбные числа через запятую, возникает ошибка, в итоге решила поменять на string
+    i = 0
+    for val in values:
+        loclist = list(val)
+        loclist[1] = str(loclist[1])
+        values[i] = tuple(loclist)
+        i+=1
+    context = {"data_checks":values, "start_date": str(start_date), "end_date": str(end_date) }
+    return render(request, 'cost_control/analitics_check.html', context)

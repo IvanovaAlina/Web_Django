@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     
     #сторонние приложения
     'bootstrap4',
+    'googlecharts',
+    'django_matplotlib',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
