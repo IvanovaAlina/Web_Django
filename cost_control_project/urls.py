@@ -14,6 +14,10 @@ urlpatterns = [
     path('delete_upload/<int:check_id>/', views.delete_upload, name='delete_upload'),
     path('analyze_checks/', views.analyze_checks, name='analyze_checks'),
     path('analyze_checks_filters/', views.analyze_checks_filters, name='analyze_checks_filters'),
+    path('category_list/', views.category_list, name='category_list'),
+    path('new_category/', views.new_category, name='new_category'),
+    path('edit_category/<int:category_id>/', views.edit_category, name='edit_category'),
+    path('delete_category/<int:category_id>/', views.delete_category, name='delete_category'),
 ]
 
 

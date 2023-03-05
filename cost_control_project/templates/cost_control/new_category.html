@@ -1,0 +1,31 @@
+{% extends "main_page/base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+<link rel="stylesheet" href="{% static 'custom.css' %}">
+<div class="container">
+    <div class="row">
+        <div class="col-md-auto">
+            <a class="btn btn-outline-secondary btn-circle btn-circle-sm" href="{% url 'cost_control_project:category_list' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 20">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </a>
+        </div>
+        <div class="col-md-auto">
+            <h3>Добавление новой категории</h3>
+        </div>
+    </div>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+<form action="{% url 'cost_control_project:new_category' %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button name="submit" class="btn btn-success">Добавить</button>
+    {% endbuttons %}
+</form>
+{% endblock content %}

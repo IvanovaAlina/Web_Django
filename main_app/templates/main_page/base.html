@@ -30,6 +30,10 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'cost_control_project:index' %}">Общая информация</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'cost_control_project:new_category' %}">Добавить категорию</a>
+                        <a class="dropdown-item" href="{% url 'cost_control_project:category_list' %}">Список категорий</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'cost_control_project:new_check' %}">Добавить чек</a>
                         <a class="dropdown-item" href="{% url 'cost_control_project:check_list' %}">Список чеков</a>
                         <div class="dropdown-divider"></div>
@@ -57,7 +61,7 @@
         </div>
     </nav>
 
-    <main role="main" class="main container">
+    <main role="main" class="main container" style="max-width: 1300px">
         <div class="pb-2 mb-2 border-bottom">
             {% block page_header %}{% endblock page_header %}
         </div>

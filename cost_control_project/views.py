@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Checks
-from .forms import CheckForm
+from .models import Checks, CategoryPurchase
+from .forms import CheckForm, CategoryPurchaseForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,Http404
 from django.conf import settings
@@ -129,11 +129,15 @@ def analyze_checks(request):
 
 @login_required
 def analyze_checks_filters(request):
-    start_date_str = request.GET["date_begin"] 
+    start_date_str = request.GET["date_begin"]
     start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
     end_date_str = request.GET["date_end"]
     end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
-    queryset = Checks.objects.filter(owner = request.user)
+    category_str = request.GET["category"]
+    if category_str != "": 
+        queryset = Checks.objects.filter(owner = request.user) & Checks.objects.filter(category__name_purchase__contains = category_str)
+    else:
+        queryset = Checks.objects.filter(owner = request.user)
     qsstats = QuerySetStats(queryset, date_field='date_check', aggregate=Sum('summ_check'))
     values = qsstats.time_series(start_date, end_date, interval='days')
     #google charts пишет дорбные числа через запятую, возникает ошибка, в итоге решила поменять на string
@@ -143,5 +147,53 @@ def analyze_checks_filters(request):
         loclist[1] = str(loclist[1])
         values[i] = tuple(loclist)
         i+=1
-    context = {"data_checks":values, "start_date": str(start_date), "end_date": str(end_date) }
+    context = {"data_checks":values, "start_date": str(start_date), "end_date": str(end_date), "category":category_str }
     return render(request, 'cost_control/analitics_check.html', context)
+
+@login_required
+def category_list(request):
+    list = CategoryPurchase.objects.filter(owner = request.user).order_by('date_added')
+    context = {'categories': list}
+    return render(request, 'cost_control\categories_list.html', context)
+
+@login_required
+def new_category(request):
+    if request.method != 'POST':
+        form = CategoryPurchaseForm()
+    else:
+        form =  CategoryPurchaseForm(data = request.POST)
+        if form.is_valid():
+            new_cat = form.save(commit=False)
+            new_cat.owner = request.user
+            new_cat.save()
+            return redirect('cost_control_project:category_list')
+
+    context = {"form" : form}
+    return render(request, 'cost_control/new_category.html', context)
+
+@login_required
+def delete_category(request, category_id):
+    cat = CategoryPurchase.objects.get(id = category_id)
+    if cat.owner != request.user :
+        raise Http404
+    if request.method=="POST":
+        cat.delete()
+        return redirect('cost_control_project:category_list')
+    context = {"item":cat}
+    return render(request, 'cost_control/confirm_delete_category.html', context)
+    
+@login_required
+def edit_category(request, category_id):
+    cat = CategoryPurchase.objects.get(id = category_id)
+    if cat.owner != request.user :
+        raise Http404
+    if request.method != 'POST':
+        form = CategoryPurchaseForm(instance = cat)
+    else:
+        form =  CategoryPurchaseForm(instance = cat, data = request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cost_control_project:category_list')
+
+    context = {"item":cat, "form" : form}
+    return render(request, 'cost_control/edit_category.html', context)

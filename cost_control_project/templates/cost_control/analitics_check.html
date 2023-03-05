@@ -21,47 +21,57 @@
 
 {% block content %}
 	<form action="{% url 'cost_control_project:analyze_checks_filters' %}" method="get">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-auto" style=" margin-top: 6px;">
-				<h5>Дата начала</h5>
+		<div class="container" style=" float: right; right: 9%;">
+			<div class="row">
+				<div class="col-md-auto" style=" margin-top: 6px;">
+					<h6>Дата начала</h6>
+				</div>
+				<div class="col-md-auto">
+					<input class="form-control" type="date" name="date_begin" value="{{start_date}}" style="font-size:14px">
+				</div>
+				<div class="col-md-auto" style=" margin-top: 6px; ">
+					<h6>Дата окончания</h6>
+				</div>
+				<div class="col-md-auto">
+					<input class="form-control" type="date" name="date_end" value="{{end_date}}" style="font-size:14px">
+				</div>
+				<div class="col-md-auto" style=" margin-top: 6px; ">
+					<h6>Категория</h6>
+				</div>
+				<div class="col-md-auto">
+					<input class="form-control" type="text" name="category" placeholder="Введите категорию..." value="{{category}}" style="font-size:14px">
+				</div>
+				<div class="col-md-auto">
+					<button name="submit" class="btn btn-info">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style="margin-bottom: 5px;">
+							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+						</svg>
+					</button>
+				</div>
 			</div>
-			<div class="col-md-auto">
-				<input class="form-control" type="date" name="date_begin" value="{{start_date}}">
-			</div>
-			<div class="col-md-auto" style=" margin-top: 6px; ">
-				<h5>Дата окончания</h5>
-			</div>
-			<div class="col-md-auto">
-				<input class="form-control" type="date" name="date_end" value="{{end_date}}">
-			</div>
-			<div class="col-md-auto">
-				<button name="submit" class="btn btn-info">Фильтровать</button>
-			</div>
-		</div>
-	</div><br />
+		</div><br />
 	</form>
 
-	<div id="count_sum"></div>
+	<div id="count_sum" class="position-relative" style=" float: right; right: 9%;"></div>
 	{% googlecharts %}
-	{% data data_checks "sum" %}
-	{% col "string" "Дата покупок" %}"{{ val|date:"M j" }}"{% endcol %}
-	{% col "number" "Сумма покупок" %}{{ val }}{% endcol %}
-	{% enddata %}
+		{% data data_checks "sum" %}
+			{% col "string" "Дата покупок" %}"{{ val|date:"M j" }}"{% endcol %}
+			{% col "number" "Сумма покупок" %}{{ val }}{% endcol %}
+		{% enddata %}
 
-	{% options %}
-	kind: "LineChart",
-	options: {
-	backgroundColor: "#f9f9f9",
-	colors: ["#09f"],
-	gridlineColor: "#ddd",
-	legend: "none",
-	vAxis: {minValue: 2},
-	chartArea: {left: 40, top: 20, width: 1000, height: 400},
-	width: 1050,
-	height:460
-	}
-	{% endoptions %}
-	{% graph "count_sum" "sum" %}
+		{% options %}
+			kind: "LineChart",
+			options: {
+				backgroundColor: "#f9f9f9",
+				colors: ["#09f"],
+				gridlineColor: "#ddd",
+				legend: "none",
+				vAxis: {minValue: 2},
+				chartArea: {left: 40, top: 20, width: 1000, height: 400},
+				width: 1050,
+				height:460
+			}
+		{% endoptions %}
+		{% graph "count_sum" "sum" %}
 	{% endgooglecharts %}
-	{% endblock content %}
+{% endblock content %}
