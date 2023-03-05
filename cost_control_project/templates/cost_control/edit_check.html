@@ -25,7 +25,7 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-    <div class="container">
+    <div class="container" style="max-width: 1300px; padding-left: 0px;">
         <div class="row">
             <div class="col-md-auto">
                 <p>Приложение по чеку</p>
@@ -53,7 +53,9 @@
                 </div>
             </div>
         {% else %}
-            <input type="file" name="photo_check"> <br/> <br/>
+            <div class="col-md-auto">
+                <input type="file" name="photo_check"><br/> <br/>
+            </div>
         {% endif %}
     </div>
      <button name="submit" class="btn btn-success">Сохарнить</button>
